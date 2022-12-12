@@ -91,7 +91,7 @@ set(OPENVINO_DIRECTORY "" CACHE PATH "User can specify the installed openvino di
 option(BUILD_ON_JETSON "Whether to build fastdeploy on Nvidia Jetson" OFF)
 if(BUILD_ON_JETSON)
   set(WITH_GPU ON)
-  set(ENABLE_TRT_BACKEND ON)
+  # set(ENABLE_TRT_BACKEND ON)
   set(ENABLE_ORT_BACKEND ON)
 endif()
 
@@ -224,7 +224,7 @@ if(ENABLE_PADDLE_BACKEND)
   list(APPEND ALL_DEPLOY_SRCS ${DEPLOY_PADDLE_SRCS})
   include(${PROJECT_SOURCE_DIR}/cmake/paddle_inference.cmake)
   if(NOT APPLE)
-    list(APPEND DEPEND_LIBS external_paddle_inference external_dnnl external_omp)
+    list(APPEND DEPEND_LIBS external_paddle_inference)
   else()
     # no third parties libs(mkldnn and omp) need to
     # link into paddle_inference on MacOS OSX.
