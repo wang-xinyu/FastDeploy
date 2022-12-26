@@ -78,7 +78,7 @@ else()
     endif()
   else()
     if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "aarch64")
-      message(FATAL_ERROR "Paddle Backend doesn't support linux aarch64 now.")
+      # message(FATAL_ERROR "Paddle Backend doesn't support linux aarch64 now.")
       set(PADDLEINFERENCE_FILE "paddle_inference-linux-aarch64-${PADDLEINFERENCE_VERSION}.tgz")
     else()
       set(PADDLEINFERENCE_FILE "paddle_inference-linux-x64-${PADDLEINFERENCE_VERSION}.tgz")
@@ -91,7 +91,8 @@ else()
       endif()
     endif()
   endif()
-  set(PADDLEINFERENCE_URL "${PADDLEINFERENCE_URL_BASE}${PADDLEINFERENCE_FILE}")
+  # set(PADDLEINFERENCE_URL "${PADDLEINFERENCE_URL_BASE}${PADDLEINFERENCE_FILE}")
+  set(PADDLEINFERENCE_URL "https://paddle-inference-lib.bj.bcebos.com/2.4.0/cxx_c/Jetson/jetpack4.5_gcc7.5/xavier/paddle_inference_install_dir.tgz")
   
   ExternalProject_Add(
     ${PADDLEINFERENCE_PROJECT}
@@ -116,16 +117,16 @@ set_property(TARGET external_paddle_inference PROPERTY IMPORTED_LOCATION
                                          ${PADDLEINFERENCE_COMPILE_LIB})
 add_dependencies(external_paddle_inference ${PADDLEINFERENCE_PROJECT})
 
-if (NOT APPLE)
-  # no third parties libs(mkldnn and omp) need to 
-  # link into paddle_inference on MacOS OSX.
-  add_library(external_dnnl STATIC IMPORTED GLOBAL)
-  set_property(TARGET external_dnnl PROPERTY IMPORTED_LOCATION
-                                          ${DNNL_LIB})
-  add_dependencies(external_dnnl ${PADDLEINFERENCE_PROJECT})
-
-  add_library(external_omp STATIC IMPORTED GLOBAL)
-  set_property(TARGET external_omp PROPERTY IMPORTED_LOCATION
-                                          ${OMP_LIB})
-  add_dependencies(external_omp ${PADDLEINFERENCE_PROJECT})
-endif()
+# if (NOT APPLE)
+#   # no third parties libs(mkldnn and omp) need to 
+#   # link into paddle_inference on MacOS OSX.
+#   add_library(external_dnnl STATIC IMPORTED GLOBAL)
+#   set_property(TARGET external_dnnl PROPERTY IMPORTED_LOCATION
+#                                           ${DNNL_LIB})
+#   add_dependencies(external_dnnl ${PADDLEINFERENCE_PROJECT})
+# 
+#   add_library(external_omp STATIC IMPORTED GLOBAL)
+#   set_property(TARGET external_omp PROPERTY IMPORTED_LOCATION
+#                                           ${OMP_LIB})
+#   add_dependencies(external_omp ${PADDLEINFERENCE_PROJECT})
+# endif()

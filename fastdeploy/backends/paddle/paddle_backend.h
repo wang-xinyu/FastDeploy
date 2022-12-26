@@ -43,6 +43,27 @@ struct IpuOption {
   bool ipu_enable_half_partial;
 };
 
+struct TrtBackendOption {
+  std::string model_file = "";   // Path of model file
+  std::string params_file = "";  // Path of parameters file, can be empty
+  // format of input model
+  ModelFormat model_format = ModelFormat::AUTOREC;
+
+  int gpu_id = 0;
+  bool enable_fp16 = false;
+  bool enable_int8 = false;
+  size_t max_batch_size = 32;
+  size_t max_workspace_size = 1 << 30;
+  std::map<std::string, std::vector<int32_t>> max_shape;
+  std::map<std::string, std::vector<int32_t>> min_shape;
+  std::map<std::string, std::vector<int32_t>> opt_shape;
+  std::string serialize_file = "";
+  bool enable_pinned_memory = false;
+  void* external_stream_ = nullptr;
+};
+
+
+
 struct PaddleBackendOption {
   std::string model_file = "";   // Path of model file
   std::string params_file = "";  // Path of parameters file, can be empty
@@ -63,11 +84,11 @@ struct PaddleBackendOption {
   bool enable_log_info = false;
 
   bool enable_trt = false;
-#ifdef ENABLE_TRT_BACKEND
+// #ifdef ENABLE_TRT_BACKEND
   TrtBackendOption trt_option;
   bool collect_shape = false;
   std::vector<std::string> trt_disabled_ops_{};
-#endif
+// #endif
 
 #ifdef WITH_IPU
   bool use_ipu = true;
@@ -132,7 +153,7 @@ class PaddleBackend : public BaseBackend {
   std::vector<TensorInfo> GetOutputInfos() override;
 
  private:
-#ifdef ENABLE_TRT_BACKEND
+// #ifdef ENABLE_TRT_BACKEND
   void
   CollectShapeRun(paddle_infer::Predictor* predictor,
                   const std::map<std::string, std::vector<int>>& shape) const;
@@ -142,7 +163,7 @@ class PaddleBackend : public BaseBackend {
       std::map<std::string, std::vector<int>>* min_shape,
       std::map<std::string, std::vector<int>>* opt_shape) const;
   void SetTRTDynamicShapeToConfig(const PaddleBackendOption& option);
-#endif
+// #endif
   PaddleBackendOption option_;
   paddle_infer::Config config_;
   std::shared_ptr<paddle_infer::Predictor> predictor_;

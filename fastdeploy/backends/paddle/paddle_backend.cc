@@ -16,6 +16,8 @@
 #include "fastdeploy/utils/path.h"
 #include <sstream>
 
+#define ENABLE_TRT_BACKEND
+
 namespace fastdeploy {
 
 void PaddleBackend::BuildOption(const PaddleBackendOption& option) {

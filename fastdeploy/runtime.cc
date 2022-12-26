@@ -713,7 +713,7 @@ void Runtime::CreatePaddleBackend() {
     pd_option.model_buffer_size_ = option.model_buffer_size_;
     pd_option.params_buffer_size_ = option.params_buffer_size_;
   }
-#ifdef ENABLE_TRT_BACKEND
+// #ifdef ENABLE_TRT_BACKEND
   if (pd_option.use_gpu && option.pd_enable_trt) {
     pd_option.enable_trt = true;
     pd_option.collect_shape = option.pd_collect_shape;
@@ -730,7 +730,7 @@ void Runtime::CreatePaddleBackend() {
     pd_option.trt_option = trt_option;
     pd_option.trt_disabled_ops_ = option.trt_disabled_ops_;
   }
-#endif
+// #endif
 #ifdef WITH_IPU
   if (pd_option.use_ipu) {
     auto ipu_option = IpuOption();

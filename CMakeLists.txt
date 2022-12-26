@@ -93,8 +93,8 @@ set(OPENVINO_DIRECTORY "" CACHE PATH "User can specify the installed openvino di
 option(BUILD_ON_JETSON "Whether to build fastdeploy on Nvidia Jetson" OFF)
 if(BUILD_ON_JETSON)
   set(WITH_GPU ON)
-  set(ENABLE_TRT_BACKEND ON)
-  set(ENABLE_ORT_BACKEND ON)
+  # set(ENABLE_TRT_BACKEND ON)
+  # set(ENABLE_ORT_BACKEND ON)
 endif()
 
 # config GIT_URL with github mirrors to speed up dependent repos clone
@@ -240,7 +240,7 @@ if(ENABLE_PADDLE_BACKEND)
   add_definitions(-DENABLE_PADDLE_BACKEND)
   list(APPEND ALL_DEPLOY_SRCS ${DEPLOY_PADDLE_SRCS})
   include(${PROJECT_SOURCE_DIR}/cmake/paddle_inference.cmake)
-  if(NOT APPLE)
+  if(NOT APPLE AND NOT BUILD_ON_JETSON)
     list(APPEND DEPEND_LIBS external_paddle_inference external_dnnl external_omp)
   else()
     # no third parties libs(mkldnn and omp) need to

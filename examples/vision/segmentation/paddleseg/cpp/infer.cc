@@ -93,10 +93,17 @@ void GpuInfer(const std::string& model_dir, const std::string& image_file) {
 
   auto im = cv::imread(image_file);
 
+  auto tc = fastdeploy::TimeCounter();
+
   fastdeploy::vision::SegmentationResult res;
-  if (!model.Predict(im, &res)) {
-    std::cerr << "Failed to predict." << std::endl;
-    return;
+  for (int i = 0; i < 1000; i++) {
+    tc.Start();
+    if (!model.Predict(im, &res)) {
+      std::cerr << "Failed to predict." << std::endl;
+      return;
+    }
+    tc.End();
+    tc.PrintInfo();
   }
 
   std::cout << res.Str() << std::endl;
@@ -112,7 +119,13 @@ void TrtInfer(const std::string& model_dir, const std::string& image_file) {
 
   auto option = fastdeploy::RuntimeOption();
   option.UseGpu();
-  option.UseTrtBackend();
+  // option.UseTrtBackend();
+  option.backend = fastdeploy::Backend::TRT;
+  option.EnablePaddleToTrt();
+  option.EnableTrtFP16();
+  option.SetTrtCacheFile("./mobileseg_mobilenetv2");
+  option.SetTrtInputShape("x", {1, 3, 256, 512}, {1, 3, 256, 512}, {1, 3, 256, 512});
+  option.EnablePaddleTrtCollectShape();
   auto model = fastdeploy::vision::segmentation::PaddleSegModel(
       model_file, params_file, config_file, option);
 
@@ -123,10 +136,17 @@ void TrtInfer(const std::string& model_dir, const std::string& image_file) {
 
   auto im = cv::imread(image_file);
 
+  auto tc = fastdeploy::TimeCounter();
+
   fastdeploy::vision::SegmentationResult res;
-  if (!model.Predict(im, &res)) {
-    std::cerr << "Failed to predict." << std::endl;
-    return;
+  for (int i = 0; i < 1000; i++) {
+    tc.Start();
+    if (!model.Predict(im, &res)) {
+      std::cerr << "Failed to predict." << std::endl;
+      return;
+    }
+    tc.End();
+    tc.PrintInfo();
   }
 
   std::cout << res.Str() << std::endl;
